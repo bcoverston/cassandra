@@ -171,6 +171,23 @@ public class SettingsTableTest extends CQLTester
         check(pre + "legacy_ssl_storage_port", "false");
         config.server_encryption_options = config.server_encryption_options.withLegacySslStoragePort(true);
         check(pre + "legacy_ssl_storage_port", "true");
+
+        check(pre + "pem_path", "false");
+        config.server_encryption_options = config.server_encryption_options.withPemPath("/etc/cassandra/certs/cert.pem");
+        check(pre + "pem_path", "/etc/cassandra/certs/cert.pem");
+
+        check(pre + "pem_key_path", "");
+        config.server_encryption_options = config.server_encryption_options.withPemKeyPath("/etc/cassandra/certs/key.pem");
+        check(pre + "pem_key_path", "/etc/cassandra/certs/key.pem");
+
+        check(pre + "pem_ca_path", "");
+        config.server_encryption_options = config.server_encryption_options.withPemCaPath("/etc/cassandra/certs/ca.pem");
+        check(pre + "pem_ca_path", "/etc/cassandra/certs/ca.pem");
+
+        check(pre + "pem_password", "");
+        config.server_encryption_options = config.server_encryption_options.withPemPassword("BADFOOD");
+        check(pre + "pem_password", "BADFOOD");
+
     }
 
     @Test

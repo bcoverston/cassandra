@@ -35,6 +35,10 @@ public class EncryptionOptions
     public final String protocol;
     public final String algorithm;
     public final String store_type;
+    public final String pem_path;
+    public final String pem_key_path;
+    public final String pem_ca_path;
+    public final String pem_password;
     public final boolean require_client_auth;
     public final boolean require_endpoint_verification;
     public final boolean enabled;
@@ -54,9 +58,13 @@ public class EncryptionOptions
         require_endpoint_verification = false;
         enabled = false;
         optional = false;
+        pem_path = "";
+        pem_key_path = "";
+        pem_ca_path = "";
+        pem_password = "";
     }
 
-    public EncryptionOptions(String keystore, String keystore_password, String truststore, String truststore_password, List<String> cipher_suites, String protocol, String algorithm, String store_type, boolean require_client_auth, boolean require_endpoint_verification, boolean enabled, boolean optional)
+    public EncryptionOptions(String keystore, String keystore_password, String truststore, String truststore_password, List<String> cipher_suites, String protocol, String algorithm, String store_type, boolean require_client_auth, boolean require_endpoint_verification, boolean enabled, boolean optional, String pem_path, String pem_key_path, String pem_password, String pem_ca_path)
     {
         this.keystore = keystore;
         this.keystore_password = keystore_password;
@@ -70,6 +78,10 @@ public class EncryptionOptions
         this.require_endpoint_verification = require_endpoint_verification;
         this.enabled = enabled;
         this.optional = optional;
+        this.pem_path = pem_path;
+        this.pem_key_path = pem_key_path;
+        this.pem_ca_path = pem_ca_path;
+        this.pem_password = pem_password;
     }
 
     public EncryptionOptions(EncryptionOptions options)
@@ -86,97 +98,115 @@ public class EncryptionOptions
         require_endpoint_verification = options.require_endpoint_verification;
         enabled = options.enabled;
         optional = options.optional;
+        pem_path = options.pem_path;
+        pem_key_path = options.pem_key_path;
+        pem_ca_path = options.pem_ca_path;
+        pem_password = options.pem_password;
     }
 
     public EncryptionOptions withKeyStore(String keystore)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withKeyStorePassword(String keystore_password)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withTrustStore(String truststore)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withTrustStorePassword(String truststore_password)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withCipherSuites(List<String> cipher_suites)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withCipherSuites(String ... cipher_suites)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, ImmutableList.copyOf(cipher_suites),
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withProtocol(String protocol)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withAlgorithm(String algorithm)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withStoreType(String store_type)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withRequireClientAuth(boolean require_client_auth)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withRequireEndpointVerification(boolean require_endpoint_verification)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withEnabled(boolean enabled)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     public EncryptionOptions withOptional(boolean optional)
     {
         return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                            protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                           enabled, optional);
+                                           enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
+    }
+
+    public EncryptionOptions withPemPath(String pem_path)
+    {
+        return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
+                                     protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
+                                     enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
+    }
+
+    public EncryptionOptions withPemPassword(String pem_password)
+    {
+        return new EncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
+                                     protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
+                                     enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
     }
 
     /**
@@ -203,7 +233,10 @@ public class EncryptionOptions
                Objects.equals(protocol, opt.protocol) &&
                Objects.equals(algorithm, opt.algorithm) &&
                Objects.equals(store_type, opt.store_type) &&
-               Objects.equals(cipher_suites, opt.cipher_suites);
+               Objects.equals(cipher_suites, opt.cipher_suites) &&
+               Objects.equals(pem_path, opt.pem_path) &&
+               Objects.equals(pem_key_path, opt.pem_key_path) &&
+               Objects.equals(pem_password, opt.pem_password);
     }
 
     /**
@@ -221,6 +254,9 @@ public class EncryptionOptions
         result += 31 * (protocol == null ? 0 : protocol.hashCode());
         result += 31 * (algorithm == null ? 0 : algorithm.hashCode());
         result += 31 * (store_type == null ? 0 : store_type.hashCode());
+        result += 31 * (store_type == null ? 0 : pem_path.hashCode());
+        result += 31 * (store_type == null ? 0 : pem_key_path.hashCode());
+        result += 31 * (store_type == null ? 0 : pem_password.hashCode());
         result += 31 * Boolean.hashCode(enabled);
         result += 31 * Boolean.hashCode(optional);
         result += 31 * (cipher_suites == null ? 0 : cipher_suites.hashCode());
@@ -244,9 +280,9 @@ public class EncryptionOptions
             this.internode_encryption = InternodeEncryption.none;
             this.enable_legacy_ssl_storage_port = false;
         }
-        public ServerEncryptionOptions(String keystore, String keystore_password, String truststore, String truststore_password, List<String> cipher_suites, String protocol, String algorithm, String store_type, boolean require_client_auth, boolean require_endpoint_verification, boolean enabled, boolean optional, InternodeEncryption internode_encryption, boolean enable_legacy_ssl_storage_port)
+        public ServerEncryptionOptions(String keystore, String keystore_password, String truststore, String truststore_password, List<String> cipher_suites, String protocol, String algorithm, String store_type, boolean require_client_auth, boolean require_endpoint_verification, boolean enabled, boolean optional, String pem_path, String pem_key_path, String pem_ca_path, String pem_password, InternodeEncryption internode_encryption, boolean enable_legacy_ssl_storage_port)
         {
-            super(keystore, keystore_password, truststore, truststore_password, cipher_suites, protocol, algorithm, store_type, require_client_auth, require_endpoint_verification, enabled, optional);
+            super(keystore, keystore_password, truststore, truststore_password, cipher_suites, protocol, algorithm, store_type, require_client_auth, require_endpoint_verification, enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password);
             this.internode_encryption = internode_encryption;
             this.enable_legacy_ssl_storage_port = enable_legacy_ssl_storage_port;
         }
@@ -286,105 +322,134 @@ public class EncryptionOptions
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withKeyStorePassword(String keystore_password)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withTrustStore(String truststore)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withTrustStorePassword(String truststore_password)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withCipherSuites(List<String> cipher_suites)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withCipherSuites(String ... cipher_suites)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, ImmutableList.copyOf(cipher_suites),
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withProtocol(String protocol)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withAlgorithm(String algorithm)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withStoreType(String store_type)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withRequireClientAuth(boolean require_client_auth)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withRequireEndpointVerification(boolean require_endpoint_verification)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withEnabled(boolean enabled)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withOptional(boolean optional)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
+        }
+
+        public ServerEncryptionOptions withPemPath(String pem_path)
+        {
+            return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
+                                               protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
+        }
+
+        public ServerEncryptionOptions withPemKeyPath(String pem_key_path)
+        {
+            return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
+                                               protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
+        }
+
+        public ServerEncryptionOptions withPemCaPath(String pem_ca_path)
+        {
+            return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
+                                               protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
+        }
+
+
+        public ServerEncryptionOptions withPemPassword(String pem_password)
+        {
+            return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
+                                               protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withInternodeEncryption(InternodeEncryption internode_encryption)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
         public ServerEncryptionOptions withLegacySslStoragePort(boolean enable_legacy_ssl_storage_port)
         {
             return new ServerEncryptionOptions(keystore, keystore_password, truststore, truststore_password, cipher_suites,
                                                protocol, algorithm, store_type, require_client_auth, require_endpoint_verification,
-                                               enabled, optional, internode_encryption, enable_legacy_ssl_storage_port);
+                                               enabled, optional, pem_path, pem_key_path, pem_ca_path, pem_password, internode_encryption, enable_legacy_ssl_storage_port);
         }
 
     }

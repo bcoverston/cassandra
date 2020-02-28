@@ -1044,42 +1044,54 @@ dynamic_snitch_badness_threshold: 0.1
 # the keystore and truststore.  For instructions on generating these files, see:
 # http://download.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html#CreateKeystore
 #
+# Added the capability to use certificates only from a path the following are required
+# A PEM formatted x509 certificate is required at pem_path
+# A PEM formatted CA certificate chain
+# A PKCS#8 formatted PEM key (Until netty supports something else)
+# PEM certificates and JKS keystores are mutually exclusive options, and the PEM will take precidence
+
 server_encryption_options:
     # set to true for allowing secure incoming connections
-    enabled: false
+    enabled: true
     # If enabled and optional are both set to true, encrypted and unencrypted connections are handled on the storage_port
     optional: false
     # if enabled, will open up an encrypted listening socket on ssl_storage_port. Should be used
     # during upgrade to 4.0; otherwise, set to false.
     enable_legacy_ssl_storage_port: false
     # on outbound connections, determine which type of peers to securely connect to. 'enabled' must be set to true.
-    internode_encryption: none
-    keystore: conf/.keystore
-    keystore_password: cassandra
-    truststore: conf/.truststore
-    truststore_password: cassandra
+    internode_encryption: all
+    pem_path: /home/wchar/projects/github/cassandra/tls-certs/examples/certs-tls/server.pem
+    pem_key_path: /home/wchar/projects/github/cassandra/tls-certs/examples/certs-tls/server-pkcs8-key.pem
+    pem_ca_path: /home/wchar/projects/github/cassandra/tls-certs/examples/certs-tls/ca.pem
+    # keystore: conf/.keystore
+    # keystore_password: cassandra
+    # truststore: conf/.truststore
+    # truststore_password: cassandra
     # More advanced defaults below:
     # protocol: TLS
     # store_type: JKS
-    # cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA]
+    cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA]
     # require_client_auth: false
     # require_endpoint_verification: false
 
 # enable or disable client-to-server encryption.
 client_encryption_options:
-    enabled: false
+    enabled: true
     # If enabled and optional is set to true encrypted and unencrypted connections are handled.
-    optional: false
-    keystore: conf/.keystore
-    keystore_password: cassandra
-    # require_client_auth: false
+    pem_path: /home/wchar/projects/github/cassandra/tls-certs/examples/certs-tls/server.pem
+    pem_key_path: /home/wchar/projects/github/cassandra/tls-certs/examples/certs-tls/server-pkcs8-key.pem
+    pem_ca_path: /home/wchar/projects/github/cassandra/tls-certs/examples/certs-tls/ca.pem
+    #optional: false
+    # keystore: conf/.keystore
+    # keystore_password: cassandra
+    require_client_auth: false
     # Set trustore and truststore_password if require_client_auth is true
     # truststore: conf/.truststore
     # truststore_password: cassandra
     # More advanced defaults below:
     # protocol: TLS
     # store_type: JKS
-    # cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA]
+    cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA]
 
 # internode_compression controls whether traffic between nodes is
 # compressed.

@@ -162,13 +162,14 @@ public final class SSLFactory
     }
 
     /**
+     * In the project, this is only used by the bulk loader, in the tools project
      * Create a JSSE {@link SSLContext}.
      */
     @SuppressWarnings("resource")
     public static SSLContext createSSLContext(EncryptionOptions options, boolean buildTruststore) throws IOException
     {
         TrustManager[] trustManagers = null;
-        if (buildTruststore)
+        if (buildTruststore && (options.pem_path == null || !options.pem_path.isEmpty()))
             trustManagers = buildTrustManagerFactory(options).getTrustManagers();
 
         KeyManagerFactory kmf = buildKeyManagerFactory(options);
@@ -297,16 +298,42 @@ public final class SSLFactory
             {@link SslContextBuilder#forServer(File, File, String)}). However, we are not supporting that now to keep
             the config/yaml API simple.
          */
-        KeyManagerFactory kmf = buildKeyManagerFactory(options);
+
         SslContextBuilder builder;
         if (socketType == SocketType.SERVER)
         {
-            builder = SslContextBuilder.forServer(kmf);
+            if (options.pem_path != null && !options.pem_path.isEmpty())
+            {
+                logger.info("pem_path: {}\n, pem_key_path: {}\n pem_password: {}\n", options.pem_path, options.pem_key_path, options.pem_password);
+                //call it using pem formatting
+                builder = SslContextBuilder.forServer(new File(options.pem_path), new File(options.pem_key_path), options.pem_password.isEmpty() ?  null : options.pem_password);
+                if(options.pem_ca_path != null && !options.pem_ca_path.isEmpty())
+                {
+                    builder.trustManager(new File(options.pem_ca_path));
+                }
+            }
+            else
+            {
+                KeyManagerFactory kmf = buildKeyManagerFactory(options);
+                builder = SslContextBuilder.forServer(kmf);
+            }
             builder.clientAuth(options.require_client_auth ? ClientAuth.REQUIRE : ClientAuth.NONE);
         }
         else
         {
-            builder = SslContextBuilder.forClient().keyManager(kmf);
+            if (options.pem_path != null && !options.pem_path.isEmpty())
+            {
+                builder = SslContextBuilder.forClient().keyManager(new File(options.pem_path), new File(options.pem_key_path), options.pem_password.isEmpty() ?  null : options.pem_password);
+                if(options.pem_ca_path != null && !options.pem_ca_path.isEmpty())
+                {
+                    builder.trustManager(new File(options.pem_ca_path));
+                }
+            }
+            else
+            {
+                KeyManagerFactory kmf = buildKeyManagerFactory(options);
+                builder = SslContextBuilder.forClient().keyManager(kmf);
+            }
         }
 
         builder.sslProvider(useOpenSsl ? SslProvider.OPENSSL : SslProvider.JDK);
@@ -316,7 +343,7 @@ public final class SSLFactory
         if (options.cipher_suites != null && !options.cipher_suites.isEmpty())
             builder.ciphers(options.cipher_suites, SupportedCipherSuiteFilter.INSTANCE);
 
-        if (buildTruststore)
+        if (buildTruststore && (options.pem_path == null || options.pem_path.isEmpty()))
             builder.trustManager(buildTrustManagerFactory(options));
 
         return builder.build();
@@ -372,14 +399,28 @@ public final class SSLFactory
 
         if (serverOpts != null && serverOpts.enabled)
         {
-            fileList.add(new HotReloadableFile(serverOpts.keystore));
-            fileList.add(new HotReloadableFile(serverOpts.truststore));
+            if (serverOpts.pem_key_path != null && !serverOpts.pem_key_path.isEmpty())
+            {
+                fileList.add(new HotReloadableFile(serverOpts.pem_path));
+                fileList.add(new HotReloadableFile(serverOpts.pem_key_path));
+            } else
+            {
+                fileList.add(new HotReloadableFile(serverOpts.keystore));
+                fileList.add(new HotReloadableFile(serverOpts.truststore));
+            }
         }
 
         if (clientOpts != null && clientOpts.enabled)
         {
-            fileList.add(new HotReloadableFile(clientOpts.keystore));
-            fileList.add(new HotReloadableFile(clientOpts.truststore));
+            if (clientOpts.pem_key_path != null && !clientOpts.pem_key_path.isEmpty())
+            {
+                fileList.add(new HotReloadableFile(serverOpts.pem_path));
+                fileList.add(new HotReloadableFile(serverOpts.pem_key_path));
+            } else
+            {
+                fileList.add(new HotReloadableFile(clientOpts.keystore));
+                fileList.add(new HotReloadableFile(clientOpts.truststore));
+            }
         }
 
         hotReloadableFiles = ImmutableList.copyOf(fileList);
